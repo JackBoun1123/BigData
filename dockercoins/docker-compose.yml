@@ -1,0 +1,65 @@
+version: "3.8"
+
+services:
+  rng:
+    build: rng
+    ports:
+      - "8001:80"
+    container_name: rng
+    logging:
+      driver: gelf
+      options:
+        gelf-address: "udp://logstash:12201"
+    networks:
+      - mynet
+
+  hasher:
+    build: hasher
+    ports:
+      - "8002:80"
+    container_name: hasher
+    logging:
+      driver: gelf
+      options:
+        gelf-address: "udp://logstash:12201"
+    networks:
+      - mynet
+
+  webui:
+    build: webui
+    ports:
+      - "8000:80"
+    volumes:
+      - "./webui/files/:/files/"
+    container_name: webui
+    logging:
+      driver: gelf
+      options:
+        gelf-address: "udp://logstash:12201"
+    networks:
+      - mynet
+
+  redis:
+    image: redis
+    container_name: redis
+    logging:
+      driver: gelf
+      options:
+        gelf-address: "udp://logstash:12201"
+    networks:
+      - mynet
+
+  worker:
+    build: worker
+    container_name: worker
+    logging:
+      driver: gelf
+      options:
+        gelf-address: "udp://logstash:12201"
+    networks:
+      - mynet
+
+networks:
+  mynet:
+    name: mrnamnet
+    driver: bridge
