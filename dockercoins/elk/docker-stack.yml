@@ -6,7 +6,6 @@ services:
     environment:
       - discovery.type=single-node
       - bootstrap.memory_lock=true
-      - xpack.security.enabled=false
       - "ES_JAVA_OPTS=-Xms512m -Xmx512m"
     ulimits:
       memlock:
@@ -17,7 +16,7 @@ services:
     ports:
       - "9200:9200"
     networks:
-      - elk-network
+      - coinswarmnet
     deploy:
       resources:
         limits:
@@ -30,7 +29,7 @@ services:
     volumes:
       - ./logstash/pipeline:/usr/share/logstash/pipeline
     networks:
-      - elk-network
+      - coinswarmnet
     depends_on:
       - elasticsearch
     deploy:
@@ -38,14 +37,10 @@ services:
 
   kibana:
     image: docker.elastic.co/kibana/kibana:8.5.1
-    environment:
-      - SERVER_NAME=kibana
-      - ELASTICSEARCH_HOSTS=http://elasticsearch:9200
-      - xpack.security.enabled=false
     ports:
       - "5601:5601"
     networks:
-      - elk-network
+      - coinswarmnet
     depends_on:
       - elasticsearch
 
@@ -54,5 +49,5 @@ volumes:
     driver: local
 
 networks:
-  elk-network:
-    driver: overlay
+  coinswarmnet:
+    external: true
