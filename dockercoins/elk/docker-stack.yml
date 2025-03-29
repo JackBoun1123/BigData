@@ -27,7 +27,7 @@ services:
     ports:
       - "12201:12201/udp"
     volumes:
-      - ./elk/logstash/pipeline:/usr/share/logstash/pipeline
+      - ./logstash/pipeline:/usr/share/logstash/pipeline
     networks:
       - elk-network
     depends_on:
